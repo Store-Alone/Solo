@@ -14,25 +14,25 @@ hiddenStorage.Name = "ZorVexStorage"
 -- Master Daftar Player Terizin (Combined)
 local ALLOWED_USERNAMES = {
     -- Zor_Twin (1-20)
-    "Zor_Twin1", "Zor_Twin2", "Zor_Twin3", "Zor_Twin4", "Zor_Twin5",
+    "Zor_Twin","Zor_Twin1", "Zor_Twin2", "Zor_Twin3", "Zor_Twin4", "Zor_Twin5",
     "Zor_Twin6", "Zor_Twin7", "Zor_Twin8", "Zor_Twin9", "Zor_Twin10",
     "Zor_Twin11", "Zor_Twin12", "Zor_Twin13", "Zor_Twin14", "Zor_Twin15",
     "Zor_Twin16", "Zor_Twin17", "Zor_Twin18", "Zor_Twin19", "Zor_Twin20",
 
     -- Zor_Night (1-20)
-    "Zor_Night1", "Zor_Night2", "Zor_Night3", "Zor_Night4", "Zor_Night5",
+    "Zor_Night","Zor_Night1", "Zor_Night2", "Zor_Night3", "Zor_Night4", "Zor_Night5",
     "Zor_Night6", "Zor_Night7", "Zor_Night8", "Zor_Night9", "Zor_Night10",
     "Zor_Night11", "Zor_Night12", "Zor_Night13", "Zor_Night14", "Zor_Night15",
     "Zor_Night16", "Zor_Night17", "Zor_Night18", "Zor_Night19", "Zor_Night20",
 
     -- Zor_Cerberuz (1-20)
-    "Zor_Cerberuz1", "Zor_Cerberuz2", "Zor_Cerberuz3", "Zor_Cerberuz4", "Zor_Cerberuz5",
+    "Zor_Cerberuz","Zor_Cerberuz1", "Zor_Cerberuz2", "Zor_Cerberuz3", "Zor_Cerberuz4", "Zor_Cerberuz5",
     "Zor_Cerberuz6", "Zor_Cerberuz7", "Zor_Cerberuz8", "Zor_Cerberuz9", "Zor_Cerberuz10",
     "Zor_Cerberuz11", "Zor_Cerberuz12", "Zor_Cerberuz13", "Zor_Cerberuz14", "Zor_Cerberuz15",
     "Zor_Cerberuz16", "Zor_Cerberuz17", "Zor_Cerberuz18", "Zor_Cerberuz19", "Zor_Cerberuz20",
 
     -- Zor_Dragon (1-20)
-    "Zor_Dragon1", "Zor_Dragon2", "Zor_Dragon3", "Zor_Dragon4", "Zor_Dragon5",
+    "Zor_Dragon","Zor_Dragon1", "Zor_Dragon2", "Zor_Dragon3", "Zor_Dragon4", "Zor_Dragon5",
     "Zor_Dragon6", "Zor_Dragon7", "Zor_Dragon8", "Zor_Dragon9", "Zor_Dragon10",
     "Zor_Dragon11", "Zor_Dragon12", "Zor_Dragon13", "Zor_Dragon14", "Zor_Dragon15",
     "Zor_Dragon16", "Zor_Dragon17", "Zor_Dragon18", "Zor_Dragon19", "Zor_Dragon20"
