@@ -49,7 +49,7 @@ end
 -- FUNGSI PENDUKUNG PET & TRADE (BUTTON 3)
 ---------------------------------------------------------
 local petOriginTable = {}
-local PetName = "GLITCH: Awakened Nighthunter"
+local PetName = "Twin Element Birdies"
 local amount = 30
 
 local function InitialHideAll()
