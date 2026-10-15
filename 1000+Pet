@@ -49,7 +49,7 @@ end
 -- FUNGSI PENDUKUNG PET & TRADE (BUTTON 3)
 ---------------------------------------------------------
 local petOriginTable = {}
-local PetName = "Twin Element Birdies"
+local PetName = "GLITCH: Awakened Nighthunter"
 local amount = 30
 
 local function InitialHideAll()
@@ -199,13 +199,13 @@ gridLayout.CellPadding = UDim2.new(0, 12, 0, 10)
 gridLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 gridLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 
--- State Variables untuk Toggle
-local isAcceptOn = true
-local isSendOn   = true
+-- State Variables untuk Toggle (Button 1 & 2 di-set false/OFF, 3 & 4 true/ON)
+local isAcceptOn = false
+local isSendOn   = false
 local isGiveOn   = true
 local isTeleOn   = true
 
--- Helper Function untuk Membuat Custom Toggle Button (Auto ON di Awal)
+-- Helper Function untuk Membuat Custom Toggle Button
 local function createToggleButton(name, textOff, textOn, initialOn, onToggleCallback)
     local btn = Instance.new("TextButton", buttonContainer)
     btn.Name = name
@@ -255,13 +255,13 @@ local function createToggleButton(name, textOff, textOn, initialOn, onToggleCall
 end
 
 ---------------------------------------------------------
--- INISIALISASI TOMBOL UTAMA
+-- INISIALISASI TOMBOL UTAMA (Button 1 & 2 -> false, 3 & 4 -> true)
 ---------------------------------------------------------
-local btnAccept = createToggleButton("AcceptTradeBtn", "Accept Trade: OFF", "Accept Trade: ON", true, function(state)
+local btnAccept = createToggleButton("AcceptTradeBtn", "Accept Trade: OFF", "Accept Trade: ON", false, function(state)
     isAcceptOn = state
 end)
 
-local btnSend = createToggleButton("SendTradeBtn", "Send Trade: OFF", "Send Trade: ON", true, function(state)
+local btnSend = createToggleButton("SendTradeBtn", "Send Trade: OFF", "Send Trade: ON", false, function(state)
     isSendOn = state
 end)
 
@@ -272,7 +272,6 @@ end)
 local btnTele = createToggleButton("TeleportBtn", "Teleport: OFF", "Teleport: ON", true, function(state)
     isTeleOn = state
     if state then
-        -- Teleport 1x jika di-toggle ke ON kembali
         pcall(function()
             if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
                 LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(6.508, 26.007, 70.928, -0.510, 0.000, -0.860, 0.000, 1.000, -0.000, 0.860, -0.000, -0.510)
@@ -372,7 +371,7 @@ task.spawn(function()
     end
 end)
 
--- [BUTTON 4 LOGIC] Teleport 1x Saat Execute Awal (Karena Default ON)
+-- [BUTTON 4 LOGIC] Teleport 1x Saat Execute Awal
 task.spawn(function()
     task.wait(0.5)
     if isTeleOn then
