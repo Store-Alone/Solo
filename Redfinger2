@@ -20,7 +20,7 @@ local ALLOWED_USERNAMES = {
     "Zor_Twin16", "Zor_Twin17", "Zor_Twin18", "Zor_Twin19", "Zor_Twin20",
 
     -- Zor_Night (1-20)
-    "Zor_Night","Zor_Night1", "Zor_Night2", "Zor_Night3", "Zor_Night4", "Zor_Night5",
+    "Zor_NightHunter","Zor_Night1", "Zor_Night2", "Zor_Night3", "Zor_Night4", "Zor_Night5",
     "Zor_Night6", "Zor_Night7", "Zor_Night8", "Zor_Night9", "Zor_Night10",
     "Zor_Night11", "Zor_Night12", "Zor_Night13", "Zor_Night14", "Zor_Night15",
     "Zor_Night16", "Zor_Night17", "Zor_Night18", "Zor_Night19", "Zor_Night20",
