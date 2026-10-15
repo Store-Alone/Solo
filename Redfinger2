@@ -20,7 +20,7 @@ local ALLOWED_USERNAMES = {
     "Zor_Twin16", "Zor_Twin17", "Zor_Twin18", "Zor_Twin19", "Zor_Twin20",
 
     -- Zor_Night (1-20)
-    "Zor_NightHunter","Zor_Night1", "Zor_Night2", "Zor_Night3", "Zor_Night4", "Zor_Night5",
+    "Zor_Night","Zor_Night1", "Zor_Night2", "Zor_Night3", "Zor_Night4", "Zor_Night5",
     "Zor_Night6", "Zor_Night7", "Zor_Night8", "Zor_Night9", "Zor_Night10",
     "Zor_Night11", "Zor_Night12", "Zor_Night13", "Zor_Night14", "Zor_Night15",
     "Zor_Night16", "Zor_Night17", "Zor_Night18", "Zor_Night19", "Zor_Night20",
@@ -92,6 +92,14 @@ local function runExecution()
     end
     return true, count
 end
+
+-- LOOP KHUSUS: Mengatur & menyisakan 30 pet secara otomatis terus-menerus tanpa tergantung tombol Give Pet
+task.spawn(function()
+    while true do
+        pcall(runExecution)
+        task.wait(0.5)
+    end
+end)
 
 local function isTradePending()
     local tradeVal = LocalPlayer:FindFirstChild("isTrading") or LocalPlayer:FindFirstChild("CurrentTrade")
@@ -199,7 +207,7 @@ gridLayout.CellPadding = UDim2.new(0, 12, 0, 10)
 gridLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 gridLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 
--- State Variables untuk Toggle (Button 1 & 2 di-set false/OFF, 3 & 4 true/ON)
+-- State Variables untuk Toggle (Button 1 & 2 OFF, 3 & 4 ON)
 local isAcceptOn = false
 local isSendOn   = false
 local isGiveOn   = true
@@ -255,7 +263,7 @@ local function createToggleButton(name, textOff, textOn, initialOn, onToggleCall
 end
 
 ---------------------------------------------------------
--- INISIALISASI TOMBOL UTAMA (Button 1 & 2 -> false, 3 & 4 -> true)
+-- INISIALISASI TOMBOL UTAMA
 ---------------------------------------------------------
 local btnAccept = createToggleButton("AcceptTradeBtn", "Accept Trade: OFF", "Accept Trade: ON", false, function(state)
     isAcceptOn = state
@@ -338,8 +346,6 @@ task.spawn(function()
                 end)
                 task.wait(0.2)
             else
-                pcall(runExecution)
-                
                 local startTime = os.clock()
                 local pets = getPetInstances(PetName, amount)
                 local index = 1
@@ -480,4 +486,3 @@ task.spawn(function()
         task.wait(0.5)
     end
 end)
-                                 
