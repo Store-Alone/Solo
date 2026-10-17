@@ -49,7 +49,7 @@ end
 -- FUNGSI PENDUKUNG PET & TRADE (BUTTON 3)
 ---------------------------------------------------------
 local petOriginTable = {}
-local PetName = "Energized Skyraider Cerberus"
+local PetName = "Corrupted Elements Hydra"
 local amount = 30
 
 local function InitialHideAll()
