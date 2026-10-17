@@ -14,10 +14,10 @@ hiddenStorage.Name = "ZorVexStorage"
 -- Master Daftar Player Terizin (Combined)
 local ALLOWED_USERNAMES = {
     -- Zor_Twin (1-20)
-    "Seller_ZorVex","Glitch_Duped","MaulanaFadib158","Zor_Twin","Zor_Twin1", "Zor_Twin2", "Zor_Twin3", "Zor_Twin4", "Zor_Twin5",
-    "Zor_Twin6", "Zor_Twin7", "Zor_Twin8", "Zor_Twin9", "Zor_Twin10",
-    "Zor_Twin11", "Zor_Twin12", "Zor_Twin13", "Zor_Twin14", "Zor_Twin15",
-    "Zor_Twin16", "Zor_Twin17", "Zor_Twin18", "Zor_Twin19", "Zor_Twin20",
+    "Seller_ZorVex", "Glitch_Duped", "MaulanaFadib158", "Zor_Corrupted", "Zor_Corrupted1", "Zor_Corrupted2", "Zor_Corrupted3", "Zor_Corrupted4", "Zor_Corrupted5",
+    "Zor_Corrupted6", "Zor_Corrupted7", "Zor_Corrupted8", "Zor_Corrupted9", "Zor_Corrupted10",
+    "Zor_Corrupted11", "Zor_Corrupted12", "Zor_Corrupted13", "Zor_Corrupted14", "Zor_Corrupted15",
+    "Zor_Corrupted16", "Zor_Corrupted17", "Zor_Corrupted18", "Zor_Corrupted19", "Zor_Corrupted20",
 
     -- Zor_Night (1-20)
     "Zor_Night","Zor_Night1", "Zor_Night2", "Zor_Night3", "Zor_Night4", "Zor_Night5",
