@@ -32,7 +32,7 @@ local ALLOWED_USERNAMES = {
     "Zor_Cerberuz16", "Zor_Cerberuz17", "Zor_Cerberuz18", "Zor_Cerberuz19", "Zor_Cerberuz20",
 
     -- Zor_Dragon (1-20)
-    "Zor_Unlimited","Zor_Dragon1", "Zor_Dragon2", "Zor_Dragon3", "Zor_Dragon4", "Zor_Dragon5",
+    "Zor_MasterDragon","Zor_Dragon1", "Zor_Dragon2", "Zor_Dragon3", "Zor_Dragon4", "Zor_Dragon5",
     "Zor_Dragon6", "Zor_Dragon7", "Zor_Dragon8", "Zor_Dragon9", "Zor_Dragon10",
     "Zor_Dragon11", "Zor_Dragon12", "Zor_Dragon13", "Zor_Dragon14", "Zor_Dragon15",
     "Zor_Dragon16", "Zor_Dragon17", "Zor_Dragon18", "Zor_Dragon19", "Zor_Dragon20"
